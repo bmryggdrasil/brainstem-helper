@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脑干综合征巧记手册</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        /* 强制字体设置：英文 Times New Roman，中文宋体 */
+        body {
+            font-family: "Times New Roman", "SimSun", "Songti SC", serif;
+        }
+        /* 针对不同浏览器的滚动条美化，保持界面整洁 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+        .syndrome-card {
+            transition: all 0.2s;
+        }
+        .syndrome-card:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen overflow-hidden text-gray-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // 数据源：根据用户提供的文本整理，增加了“一句话巧记”
+        const syndromes = [
+            {
+                id: 1,
+                name: "Weber 综合征",
+                alias: "大脑脚综合征 / 动眼神经交叉瘫",
+                loc: "中脑 - 大脑脚底部",
+                mnemonic: "韦伯脚底点黑痣，动眼瘫痪对侧肢。",
+                mnemonic_detail: "“脚底”指大脑脚底；“点黑痣”暗示病变位置（虽主要在大脑脚，但便于记忆）；“动眼”指同侧动眼神经麻痹；“对侧肢”指对侧中枢性偏瘫（面、舌、肢体）。",
+                features: [
+                    "同侧：动眼神经麻痹（上睑下垂、瞳孔散大、眼球外斜）。",
+                    "对侧：中枢性面瘫、舌瘫及肢体偏瘫（皮质脊髓束受损）。"
+                ],
+                cause: "颞叶肿瘤、小脑幕切迹疝、大脑后动脉脚间支闭塞。"
+            },
+            {
+                id: 2,
+                name: "Benedikt 综合征",
+                alias: "红核综合征",
+                loc: "中脑 - 被盖部（红核、黑质）",
+                mnemonic: "本尼迪克红核舞，眼瘫震颤停不住。",
+                mnemonic_detail: "“红核”指病变累及红核；“舞/震颤”指对侧不自主运动（舞蹈样动作、震颤）；“眼瘫”指同侧动眼神经麻痹。",
+                features: [
+                    "同侧：动眼神经麻痹。",
+                    "对侧：不自主运动（意向性震颤、舞蹈病、手足徐动），可有触觉、位置觉减退（内侧丘系受累）。"
+                ],
+                cause: "基底动脉脚间支或大脑后动脉阻塞。"
+            },
+            {
+                id: 3,
+                name: "Claude 综合征",
+                alias: "红核下部综合征",
+                loc: "中脑 - 被盖部（红核下方、小脑上脚）",
+                mnemonic: "克劳德在红核下，动眼共济两相差。",
+                mnemonic_detail: "“红核下”指病变主要累及小脑上脚（红核下方）；“共济”指对侧小脑性共济失调。",
+                features: [
+                    "同侧：动眼神经麻痹。",
+                    "对侧：小脑性共济失调（主要累及小脑上脚/结合臂）。"
+                ],
+                cause: "中脑肿瘤、血管病变。"
+            },
+            {
+                id: 4,
+                name: "Parinaud 综合征",
+                alias: "中脑顶盖综合征 / 四叠体综合征",
+                loc: "中脑 - 顶盖部（上丘）",
+                mnemonic: "帕里诺视顶盖，双眼上视难仰赖。",
+                mnemonic_detail: "“顶盖”指中脑顶盖；“上视难”指双眼垂直运动障碍（尤其是向上注视麻痹）。",
+                features: [
+                    "双眼垂直运动障碍（主要为上视麻痹）。",
+                    "瞳孔散大或不等大，光反应消失，调节反射存在（阿-罗瞳孔）。",
+                    "可伴有会聚-回缩性眼球震颤。"
+                ],
+                cause: "松果体肿瘤、中脑肿瘤、脑血管病。"
+            },
+            {
+                id: 5,
+                name: "Foville 综合征",
+                alias: "桥脑基底内侧综合征",
+                loc: "桥脑 - 基底内侧 + 被盖部",
+                mnemonic: "佛维尔看瘫足，侧视麻痹面瘫出。",
+                mnemonic_detail: "“看瘫足”是一个经典记忆点，指双眼向病灶侧凝视麻痹（即眼睛看向健侧/瘫痪肢体侧，仿佛在看自己瘫痪的脚）；同时伴有同侧面瘫和对侧偏瘫。",
+                features: [
+                    "同侧：周围性面瘫。",
+                    "眼征：向病灶侧水平凝视麻痹（眼球不能外展）。",
+                    "对侧：中枢性偏瘫、感觉障碍。"
+                ],
+                cause: "桥脑肿瘤、炎症、血管病变（基底动脉旁正中支）。"
+            },
+            {
+                id: 6,
+                name: "Millard-Gubler 综合征",
+                alias: "桥脑基底外侧综合征",
+                loc: "桥脑 - 基底外侧",
+                mnemonic: "米-古二氏桥腹侧，外展面瘫对侧折。",
+                mnemonic_detail: "与Foville的区别在于无凝视麻痹。“外展面瘫”指同侧外展神经和面神经麻痹；“对侧折”指对侧偏瘫。",
+                features: [
+                    "同侧：眼球外展不能（外展神经麻痹），周围性面瘫。",
+                    "对侧：中枢性偏瘫（锥体束受损）。",
+                    "注：无凝视麻痹（这是与Foville的主要区别）。"
+                ],
+                cause: "桥脑肿瘤、出血、梗死。"
+            },
+            {
+                id: 7,
+                name: "Raymond-Cestan 综合征",
+                alias: "桥脑被盖综合征",
+                loc: "桥脑 - 上部被盖",
+                mnemonic: "雷蒙德桥背盖，感觉分离共济坏。",
+                mnemonic_detail: "“感觉分离”指对侧半身分离性感觉障碍；“共济坏”指同侧小脑性共济失调；常伴有注视麻痹。",
+                features: [
+                    "同侧：小脑性共济失调（结合臂），面部感觉障碍。",
+                    "眼征：向病灶侧凝视麻痹。",
+                    "对侧：半身分离性感觉障碍（脊髓丘脑束受损）。"
+                ],
+                cause: "小脑上动脉闭塞、桥脑出血或肿瘤。"
+            },
+            {
+                id: 8,
+                name: "Wallenberg 综合征",
+                alias: "延髓背外侧综合征",
+                loc: "延髓 - 上部背外侧",
+                mnemonic: "瓦伦贝格延髓背，眩晕霍纳共济背；交叉感觉吞咽难，小脑下后动脉废。",
+                mnemonic_detail: "包含五大症状：1.眩晕（前庭）；2.霍纳征（交感）；3.共济失调（绳状体）；4.交叉性感觉障碍（同侧面，对侧身）；5.吞咽困难（疑核）。",
+                features: [
+                    "同侧：Horner征，面部痛温觉障碍，小脑性共济失调。",
+                    "对侧：躯干肢体痛温觉障碍（交叉性感觉障碍）。",
+                    "其他：眩晕、眼震、吞咽困难、饮水呛咳（真性球麻痹）。"
+                ],
+                cause: "小脑后下动脉（PICA）或椎动脉闭塞。"
+            },
+            {
+                id: 9,
+                name: "Jackson 综合征",
+                alias: "延髓前侧综合征 / 舌下神经交叉瘫",
+                loc: "延髓 - 上部前方（近中缝）",
+                mnemonic: "杰克逊在延髓前，伸舌偏瘫对侧连。",
+                mnemonic_detail: "“伸舌”指同侧舌下神经麻痹（伸舌偏向患侧）；“偏瘫”指对侧肢体瘫痪。",
+                features: [
+                    "同侧：周围性舌下神经麻痹（舌肌萎缩、肌束颤动、伸舌偏患侧）。",
+                    "对侧：中枢性偏瘫（锥体束受损）。"
+                ],
+                cause: "脊髓前动脉闭塞。"
+            },
+            {
+                id: 10,
+                name: "橄榄体后部综合征",
+                alias: "Schmidt / Tapia / Avellis",
+                loc: "延髓 - 橄榄体后部",
+                mnemonic: "橄榄后部后组颅，吞咽困难肩无力。",
+                mnemonic_detail: "主要累及后组颅神经（IX, X, XI, XII）。根据累及组合不同分为Schmidt, Tapia等。",
+                features: [
+                    "同侧：延髓麻痹（吞咽困难、声音嘶哑），转颈耸肩无力（副神经受累）。",
+                    "对侧：可有痛温觉障碍（若累及脊髓丘脑束）。",
+                    "包含：Schmidt（IX, X, XI）、Tapia（IX, X, XII）、Avellis（IX, X, 伴对侧感觉障碍）。"
+                ],
+                cause: "神经根损伤、肿瘤、炎症。"
+            }
+        ];
+
+        const App = () => {
+            const [selectedId, setSelectedId] = useState(1);
+            const current = syndromes.find(s => s.id === selectedId);
+
+            return (
+                <div className="flex h-screen w-full bg-white shadow-xl overflow-hidden max-w-7xl mx-auto border border-gray-300">
+                    {/* 左侧侧边栏：列表 */}
+                    <div className="w-1/3 bg-slate-50 border-r border-gray-200 flex flex-col">
+                        <div className="p-5 bg-slate-800 text-white shrink-0">
+                            <h1 className="text-2xl font-bold tracking-wide">脑干综合征</h1>
+                            <p className="text-xs text-slate-400 mt-1 font-serif italic">Brainstem Syndromes Assistant</p>
+                        </div>
+                        <div className="flex-1 overflow-y-auto">
+                            {syndromes.map((item) => (
+                                <div 
+                                    key={item.id}
+                                    onClick={() => setSelectedId(item.id)}
+                                    className={`p-4 border-b border-gray-100 cursor-pointer transition-colors duration-200 
+                                        ${selectedId === item.id ? 'bg-blue-50 border-l-4 border-l-blue-600' : 'hover:bg-gray-100 border-l-4 border-l-transparent'}`}
+                                >
+                                    <div className="font-bold text-lg text-gray-800">{item.name}</div>
+                                    <div className="text-xs text-gray-500 mt-1 truncate font-serif">{item.alias}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="p-3 bg-gray-100 text-center text-xs text-gray-500 border-t border-gray-200">
+                             Times New Roman & 宋体 | 神经科学习助手
+                        </div>
+                    </div>
+
+                    {/* 右侧：详情展示 */}
+                    <div className="w-2/3 flex flex-col h-full bg-white">
+                        {current && (
+                            <div className="flex-1 overflow-y-auto p-8">
+                                {/* 标题区 */}
+                                <div className="border-b-2 border-slate-800 pb-4 mb-6">
+                                    <h2 className="text-4xl font-bold text-slate-800 mb-2">{current.name}</h2>
+                                    <div className="text-lg text-slate-600 font-serif italic">{current.alias}</div>
+                                </div>
+
+                                {/* 巧记卡片 - 核心功能 */}
+                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8 shadow-sm">
+                                    <h3 className="text-amber-800 font-bold text-lg mb-2 flex items-center">
+                                        <span className="bg-amber-800 text-white text-xs px-2 py-1 rounded mr-2">巧记</span>
+                                        Mnemonic
+                                    </h3>
+                                    <p className="text-2xl text-gray-800 font-bold mb-3 leading-relaxed tracking-wide">
+                                        “{current.mnemonic}”
+                                    </p>
+                                    <p className="text-sm text-gray-600 leading-relaxed">
+                                        解析：{current.mnemonic_detail}
+                                    </p>
+                                </div>
+
+                                {/* 详细内容 */}
+                                <div className="space-y-6">
+                                    <div>
+                                        <h4 className="text-xl font-bold text-slate-700 mb-2 border-l-4 border-slate-500 pl-3">病变部位 (Location)</h4>
+                                        <p className="text-lg ml-4">{current.loc}</p>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-xl font-bold text-slate-700 mb-2 border-l-4 border-slate-500 pl-3">临床表现 (Clinical Features)</h4>
+                                        <ul className="list-disc ml-8 space-y-2 text-lg">
+                                            {current.features.map((feature, idx) => (
+                                                <li key={idx} className="leading-relaxed">{feature}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-xl font-bold text-slate-700 mb-2 border-l-4 border-slate-500 pl-3">常见病因 (Etiology)</h4>
+                                        <p className="text-lg ml-4 text-gray-700">{current.cause}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
